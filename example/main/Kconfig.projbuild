@@ -1,0 +1,17 @@
+menu "Task Monitor Project Configuration"
+
+    config FREERTOS_USE_TRACE_FACILITY
+        bool "Enable trace facility"
+        default y
+        help
+            Enables additional structure members and functions to assist with execution visualization and tracing
+            (see configUSE_TRACE_FACILITY documentation for more details).
+
+    config FREERTOS_GENERATE_RUN_TIME_STATS
+        bool "Enable trace facility"
+        default y
+        help
+            Enables collection of run time statistics for each task
+            (see configGENERATE_RUN_TIME_STATS documentation for more details).
+
+endmenu

@@ -1,0 +1,8 @@
+# Build results
+build/
+
+# VSCode
+.vscode/
+
+# Project
+sdkconfig
