@@ -118,7 +118,7 @@ static void sort_tasks_by_core(TaskStatus_t *tasks_status_array, size_t number_o
     for(i=0; tasks_status_array[i].xCoreID == 0; i++);
 
     sort_tasks_by_runtime(tasks_status_array, i);
-    sort_tasks_by_runtime(&tasks_status_array[i], number_of_tasks - (i-1));
+    sort_tasks_by_runtime(&tasks_status_array[i], number_of_tasks - i);
 }
 
 static void task_status_monitor_task(void *params)
