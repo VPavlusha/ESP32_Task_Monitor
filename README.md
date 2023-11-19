@@ -27,7 +27,7 @@ The ESP32 Task Monitor is a project that provides a simple way to monitor the ta
 <img src="./doc/img/task_monitor.svg" alt="Task Monitor" width="650"/>
 
 ## 3. Basic Usage
-**NOTE:** USE_TRACE_FACILITY and GENERATE_RUN_TIME_STATS must be defined as **1** in FreeRTOSConfig.h for this API function task_monitor() to be available.
+**NOTE:** USE_TRACE_FACILITY, GENERATE_RUN_TIME_STATS and FREERTOS_VTASKLIST_INCLUDE_COREID must be defined as **1** in FreeRTOSConfig.h for this API function task_monitor() to be available.
 ```C
 // 1. Include header:
 #include "task_monitor.h"
