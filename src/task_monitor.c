@@ -15,6 +15,12 @@
     #error "USE_TRACE_FACILITY and GENERATE_RUN_TIME_STATS must be defined!"
 #endif
 
+// Configure task monitor
+#define TASK_MONITOR_CORE_AFFINITY tskNO_AFFINITY
+#define TASK_MONITOR_PERIOD_MS 1 * 1000
+#define TASK_MONITOR_SORTBY_CORE
+//#define TASK_MONITOR_SORTBY_RUNTIME
+
 #define COLOR_BLACK   "30"
 #define COLOR_RED     "31"
 #define COLOR_GREEN   "32"
@@ -96,6 +102,25 @@ static void sort_tasks_by_runtime(TaskStatus_t *tasks_status_array, size_t numbe
     }
 }
 
+static void sort_tasks_by_core(TaskStatus_t *tasks_status_array, size_t number_of_tasks)
+{
+    for (size_t i = 0; i < number_of_tasks - 1; ++i) {
+        for (size_t k = i + 1; k < number_of_tasks; ++k) {
+            if (tasks_status_array[k].xCoreID < tasks_status_array[i].xCoreID) {
+                TaskStatus_t temp = tasks_status_array[i];
+                tasks_status_array[i] = tasks_status_array[k];
+                tasks_status_array[k] = temp;
+            }
+        }
+    }
+
+    size_t i;
+    for(i=0; tasks_status_array[i].xCoreID == 0; i++);
+
+    sort_tasks_by_runtime(tasks_status_array, i);
+    sort_tasks_by_runtime(&tasks_status_array[i], number_of_tasks - (i-1));
+}
+
 static void task_status_monitor_task(void *params)
 {
     while (true) {
@@ -107,7 +132,12 @@ static void task_status_monitor_task(void *params)
             number_of_tasks = uxTaskGetSystemState(p_tasks_status_array, number_of_tasks, &total_run_time);
     
             if (total_run_time > 0) {  // Avoid divide by zero error
+#ifdef TASK_MONITOR_SORTBY_CORE
+                sort_tasks_by_core(p_tasks_status_array, number_of_tasks);
+#endif
+#ifdef TASK_MONITOR_SORTBY_RUNTIME
                 sort_tasks_by_runtime(p_tasks_status_array, number_of_tasks);
+#endif
 
                 printf("I (%lu) tm: " CYAN "%-18.16s %-11.10s %-7.6s %-8.7s %-11.10s %-12.10s %-15.15s %-s"
                     RESET_COLOR,
@@ -162,14 +192,14 @@ static void task_status_monitor_task(void *params)
         } else {
             printf("I (%lu) tm: " RED "Could not allocate required memory\n" RESET_COLOR, get_current_time_ms());
         }
-        vTaskDelay(pdMS_TO_TICKS(30 * 1000));
+        vTaskDelay(pdMS_TO_TICKS(TASK_MONITOR_PERIOD_MS));
     }
 }
 
 esp_err_t task_monitor(void)
 {
     BaseType_t status = xTaskCreatePinnedToCore(task_status_monitor_task, "monitor_task", configMINIMAL_STACK_SIZE * 4,
-                                                NULL, tskIDLE_PRIORITY + 1, NULL, tskNO_AFFINITY);
+                                                NULL, tskIDLE_PRIORITY + 1, NULL, TASK_MONITOR_CORE_AFFINITY);
     if (status != pdPASS) {
         printf("I (%lu) tm: task_status_monitor_task(): Task was not created. Could not allocate required memory\n", 
             get_current_time_ms());
