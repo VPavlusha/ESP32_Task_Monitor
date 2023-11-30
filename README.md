@@ -18,16 +18,16 @@ The ESP32 Task Monitor is a project that provides a simple way to monitor the ta
 &emsp;[7. License](#7-license)  
 
 ## 1. Features
-  - ESP-IDF v5.0.2
+  - ESP-IDF v5.3-dev-422-ga7fbf452fa 2nd stage bootloader
   - Real-time monitoring of running multiple tasks for ESP32 microcontrollers.
   - Written in C language.
   - MIT License.
 
 ## 2. ESP32 Task Monitor
-<img src="./doc/img/task_monitor.svg" alt="Task Monitor" width="650"/>
+<img src="./doc/img/task_monitor.png" alt="Task Monitor" width="650"/>
 
 ## 3. Basic Usage
-**NOTE:** USE_TRACE_FACILITY and GENERATE_RUN_TIME_STATS must be defined as **1** in FreeRTOSConfig.h for this API function task_monitor() to be available.
+**NOTE:** configUSE_TRACE_FACILITY and configGENERATE_RUN_TIME_STATS must be defined as **1** in FreeRTOSConfig.h for this API function task_monitor() to be available.
 ```C
 // 1. Include header:
 #include "task_monitor.h"
@@ -47,7 +47,7 @@ To get started with the ESP32 Task Monitor project, you'll need an ESP32 microco
 ```
 ### 4.2 Build the project:
 ```C
-    cd ESP32_Task_Monitor/example
+    cd ESP32_Task_Monitor
     idf.py build
 ```
 ### 4.3 Flash onto your ESP32 microcontroller:
@@ -65,7 +65,7 @@ Do not forget to replace PORT with your serial port name.
 More information how to build project: [ESP-IDF Programming Guide](https://docs.espressif.com/projects/esp-idf/en/v5.0.1/esp32/get-started/start-project.html).
 
 ## 5. Example
-This project includes an [example](https://github.com/VPavlusha/ESP32_Task_Monitor/tree/main/example) that showcases the functionality of the Task Monitor library. This example provides a practical demonstration of how to use the Task Monitor API to monitor tasks in your own applications.
+This project includes an [example](https://github.com/VPavlusha/ESP32_Task_Monitor/tree/main/main) that showcases the functionality of the Task Monitor library. This example provides a practical demonstration of how to use the Task Monitor API to monitor tasks in your own applications.
 
 ## 6. Contributing
 Contributions to the ESP32 Task Monitor project are welcome. If you find a bug or have a feature request, please submit an issue on the project's GitHub page. If you'd like to contribute code, please submit a pull request.
